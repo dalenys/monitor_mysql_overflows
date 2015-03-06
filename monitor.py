@@ -1,13 +1,12 @@
 #!/usr/bin/python
 
 import MySQLdb, MySQLdb.cursors
-import re
+import re, atexit
 import distutils.fancy_getopt
 
 from SchemaInformation import SchemaInformation
 
 # TODO: Maybe monitor float types?
-# TODO: Reactivate innodb stats if program is interrupted
 def main():
     hostname = 'localhost'
     user = 'root'
@@ -49,6 +48,7 @@ def main():
 
     # MySQL connection
     db = MySQLdb.connect(host=hostname, user=user, passwd=password, cursorclass=MySQLdb.cursors.DictCursor)
+    atexit.register(db.close)
 
     # Configure schma analyser
     schema = SchemaInformation(db)
@@ -87,10 +87,6 @@ def main():
                     percent, resting)
 
             idx += 1
-    schema.enableStatistics()
-
-    db.close()
-
 
 print "Start"
 main()

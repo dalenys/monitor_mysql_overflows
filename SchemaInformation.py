@@ -1,5 +1,5 @@
 import MySQLdb
-import math
+import math, atexit
 
 
 class SchemaInformation:
@@ -23,6 +23,7 @@ class SchemaInformation:
     def disableStatistics(self):
         cursor = self.db.cursor()
         cursor.execute('SET GLOBAL innodb_stats_on_metadata=0')
+        atexit.register(self.enableStatistics)
 
     def enableStatistics(self):
         cursor = self.db.cursor()
