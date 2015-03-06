@@ -58,7 +58,7 @@ def main():
         schema.included_db = args.db
 
     # Disabling InnoDB statistics for performances
-    schema.disable_statistics()
+    schema.init_mysql_session()
 
     # Get column definitions
     columns = schema.get_columns_by_table()

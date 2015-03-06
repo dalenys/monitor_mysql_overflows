@@ -18,9 +18,11 @@ class SchemaInformation(object):
             'int': 4294967295,
             'bigint': 18446744073709551615}
 
-    def disable_statistics(self):
+    def init_mysql_session(self):
         cursor = self._db.cursor()
         cursor.execute('SET GLOBAL innodb_stats_on_metadata=0')
+        #Handle group concat limitation (see MySQL group_concat documentation)
+        cursor.execute('SET SESSION group_concat_max_len = 1048576')
         atexit.register(self.enable_statistics)
 
     def enable_statistics(self):
@@ -55,7 +57,7 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 """
         sql = sql % (
         inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys()))
-
+        print sql
         cursor = self._db.cursor()
         cursor.execute(sql)
 
