@@ -23,7 +23,7 @@ def main():
             ['username=', 'u', 'MySQL username'],
             ['password=', 'p', 'MySQL password'],
             ['hostname=', 'h', 'MySQL hostname'],
-            ['threshold=', 't', None,
+            ['threshold=', 't',
              'The alerting threshold (ex: 0.8 means alert when a column max value is 80% of the max possible value'],
             ['exclude=', 'e', 'Database to exclude separated by a comma'],
             ['db=', 'd', 'Databases to analyse separated by a comma (default all)'],
@@ -34,8 +34,7 @@ def main():
 
     except Exception as error:
         print str(error)
-        #BUG: This doesn't work
-        #print "\n".join(getopt.generate_help())
+        print "\n".join(getopt.generate_help())
         exit(2)
 
     if hasattr(args, 'username'): user = args.username
@@ -45,8 +44,7 @@ def main():
     if hasattr(args, 'db'): included_db = args.db.split(',')
     if hasattr(args, 'exclude'): excluded_db = excluded_db + args.exclude.split(',')
     if hasattr(args, 'help'):
-        #BUG: this doesn't works
-        #print "\n".join(getopt.generate_help())
+        print "\n".join(getopt.generate_help())
         exit(2)
 
     # MySQL connection
