@@ -2,10 +2,13 @@
 
 
 from argparse import ArgumentParser
-import MySQLdb, MySQLdb.cursors
-import re, atexit
+import atexit, re
+
+from MySQLdb import connect
+from MySQLdb.cursors import DictCursor
 
 from SchemaInformation import SchemaInformation
+
 
 # TODO: Maybe monitor float types?
 def main():
@@ -35,10 +38,10 @@ def main():
     args.exclude += excluded_db
 
     # MySQL connection
-    db = MySQLdb.connect(host=args.host,
-                         user=args.username,
-                         passwd=args.password,
-                         cursorclass=MySQLdb.cursors.DictCursor)
+    db = connect(host=args.host,
+                 user=args.username,
+                 passwd=args.password,
+                 cursorclass=DictCursor)
     atexit.register(db.close)
 
     # Configure schma analyser

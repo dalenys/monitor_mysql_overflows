@@ -1,5 +1,7 @@
-import MySQLdb
-import math, atexit
+import atexit
+from math import ceil
+
+from MySQLdb import escape_string
 
 
 class SchemaInformation(object):
@@ -71,13 +73,13 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
         return cursor.fetchone()
 
     def in_stmt(self, l):
-        return (', '.join(map(lambda x: "'" + MySQLdb.escape_string(x) + "'", l)))
+        return (', '.join(map(lambda x: "'" + escape_string(x) + "'", l)))
 
     def get_type_max_value(self, col_type, unsigned):
         if unsigned == 'unsigned':
             return self._int_types[col_type]
         else:
-            return int(math.ceil(self._int_types[col_type] / 2))
+            return int(ceil(self._int_types[col_type] / 2))
 
 
 
