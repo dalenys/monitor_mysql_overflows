@@ -9,10 +9,6 @@ from SchemaInformation import SchemaInformation
 
 # TODO: Maybe monitor float types?
 def main():
-    hostname = 'localhost'
-    user = 'root'
-    password = ''
-    threshold = 0.8
 
     # TODO: maybe add phpmyadmin here?
     excluded_db = ['mysql', 'information_schema', 'performance_schema']
