@@ -1,71 +1,59 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-import MySQLdb
-import MySQLdb.cursors
-import re
-import atexit
-import distutils.fancy_getopt
+from argparse import ArgumentParser
+import atexit, re
+
+from MySQLdb import connect
+from MySQLdb.cursors import DictCursor
+
 from SchemaInformation import SchemaInformation
+
 
 # TODO: Maybe monitor float types?
 def main():
-    hostname = 'localhost'
-    user = 'root'
-    password = ''
-    threshold = 0.8
-
     # TODO: maybe add phpmyadmin here?
     excluded_db = ['mysql', 'information_schema', 'performance_schema']
     included_db = []
 
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('--username', '-u', default='root',
+                            help='MySQL username')
+    arg_parser.add_argument('--password', '-p', default='',
+                            help='MySQL password')
+    arg_parser.add_argument('--host', default='localhost',
+                            help='MySQL host')
+    arg_parser.add_argument('--threshold', '-t', default=0.8, type=float,
+                            help="""The alerting threshold (ex: 0.8 means"""
+                                 """ alert when a column max value is 80%% of the"""
+                                 """ max possible value""")
+    arg_parser.add_argument('--exclude', '-e', nargs='+', default=[],
+                            help='Database to exclude separated by a comma')
+    arg_parser.add_argument('--db', '-d', required=False, nargs='+',
+                            help="""Databases to analyse separated by a"""
+                                 """ comma (default all)""")
+
+    args = arg_parser.parse_args()
+    args.exclude += excluded_db
+
     try:
-        getopt = distutils.fancy_getopt.FancyGetopt([
-            ['username=', 'u', 'MySQL username'],
-            ['password=', 'p', 'MySQL password'],
-            ['hostname=', 'h', 'MySQL hostname'],
-            [
-                'threshold=',
-                't',
-                'The alerting threshold (ex: 0.8 means alert when a column max value is 80% of the max possible value'
-            ],
-            ['exclude=', 'e', 'Database to exclude separated by a comma'],
-            ['db=', 'd', 'Databases to analyse separated by a comma (default all)'],
-            ['help', None, 'This help message']
-        ])
-
-        dummy, args = getopt.getopt()
-
-    except Exception as errorMessage:
-        print str(errorMessage)
-        print "\n".join(getopt.generate_help())
+        # MySQL connection
+        db = connect(host=args.host,
+                     user=args.username,
+                     passwd=args.password,
+                     cursorclass=DictCursor)
+    except Exception as error :
+        print str(error)
         exit(2)
 
-    if hasattr(args, 'username'):
-        user = args.username
-    if hasattr(args, 'hostname'):
-        hostname = args.hostname
-    if hasattr(args, 'password'):
-        password = args.password
-    if hasattr(args, 'threshold'):
-        threshold = float(args.threshold)
-    if hasattr(args, 'db'):
-        included_db = args.db.split(',')
-    if hasattr(args, 'exclude'):
-        excluded_db = excluded_db + args.exclude.split(',')
-    if hasattr(args, 'help'):
-        print "\n".join(getopt.generate_help())
-        exit(2)
-
-    # MySQL connection
-    db = MySQLdb.connect(host=hostname, user=user, passwd=password, cursorclass=MySQLdb.cursors.DictCursor)
     atexit.register(db.close)
 
     # Configure schema analyser
     schema = SchemaInformation(db)
 
     # Handle database inc/exl parameters
-    schema.exclude_databases(excluded_db)
-    if included_db: schema.include_databases(included_db)
+    schema.excluded_db = args.exclude
+    if args.db is not None:
+        schema.included_db = args.db
 
     # Disabling InnoDB statistics for performances
     schema.disable_statistics()
@@ -75,9 +63,9 @@ def main():
 
     for definition in columns:
         # Get all max values for a given table
-        columns_max_values = schema.get_table_max_values(
-            definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
-            definition['COLUMN_NAMES'].split(','))
+
+        columns_max_values = schema.get_table_max_values(definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
+                                                         definition['COLUMN_NAMES'].split(','))
 
         table_cols = zip(definition['COLUMN_NAMES'].split(','), definition['COLUMN_TYPES'].split(','))
 
@@ -89,7 +77,7 @@ def main():
             current_max_value = columns_max_values[name]
 
             # Calculate max values with threshold and comparing
-            if (current_max_value >= int(max_allowed * threshold)):
+            if (current_max_value >= int(max_allowed * args.threshold)):
                 percent = round(float(current_max_value) / float(max_allowed) * 100, 2)
                 resting = max_allowed - current_max_value
                 print "WARNING: (%s %s) %s.%s.%s max value is %s near (allowed=%s%%, resting=%s)" % (
@@ -97,7 +85,7 @@ def main():
                     percent, resting)
 
 
-print "Start"
-main()
-print "Done"
-
+if __name__ == '__main__':
+    print "Start"
+    main()
+    print "Done"
