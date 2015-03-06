@@ -57,7 +57,7 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 """
         sql = sql % (
         inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys()))
-        print sql
+        
         cursor = self._db.cursor()
         cursor.execute(sql)
 
