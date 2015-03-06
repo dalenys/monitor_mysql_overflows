@@ -49,20 +49,20 @@ def main():
     schema = SchemaInformation(db)
 
     # Handle database inc/exl parameters
-    schema.excludeDatabases(args.exclude)
+    schema.exclude_databases(args.exclude)
     if args.db is not None:
-        schema.includeDatabases(args.db)
+        schema.include_databases(args.db)
 
     # Disabling InnoDB statistics for performances
-    schema.disableStatistics()
+    schema.disable_statistics()
 
     # Get column definitions
-    columns = schema.getColumnsByTable()
+    columns = schema.get_columns_by_table()
 
     for definition in columns:
         # Get all max values for a given table
-        columns_max_values = schema.getTableMaxValues(definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
-                                                      definition['COLUMN_NAMES'].split(','))
+        columns_max_values = schema.get_table_max_values(definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
+                                                         definition['COLUMN_NAMES'].split(','))
 
         table_cols = zip(definition['COLUMN_NAMES'].split(','), definition['COLUMN_TYPES'].split(','))
 
@@ -70,7 +70,7 @@ def main():
         for name, full_type in table_cols:
             # Parsing column data to retrieve details, max values ...
             type, unsigned = re.split('\\s*\(\d+\)\s*', full_type)
-            max_allowed = schema.getTypeMaxValue(type, unsigned)
+            max_allowed = schema.get_type_max_value(type, unsigned)
             current_max_value = columns_max_values[name]
 
             # Calculate max values with threshold and comparing

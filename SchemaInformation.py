@@ -2,7 +2,7 @@ import MySQLdb
 import math, atexit
 
 
-class SchemaInformation:
+class SchemaInformation(object):
     def __init__(self, db):
         self.db = db
         self._excluded_db = []
@@ -14,32 +14,30 @@ class SchemaInformation:
             'int': 4294967295,
             'bigint': 18446744073709551615}
 
-    def includeDatabases(self, databases):
+    def include_databases(self, databases):
         self._included_db = databases
 
-    def excludeDatabases(self, databases):
+    def exclude_databases(self, databases):
         self._excluded_db = databases
 
-    def disableStatistics(self):
+    def disable_statistics(self):
         cursor = self.db.cursor()
         cursor.execute('SET GLOBAL innodb_stats_on_metadata=0')
-        atexit.register(self.enableStatistics)
+        atexit.register(self.enable_statistics)
 
-    def enableStatistics(self):
+    def enable_statistics(self):
         cursor = self.db.cursor()
         cursor.execute('SET GLOBAL innodb_stats_on_metadata=1')
 
-    def getColumnsByTable(self):
+    def get_columns_by_table(self):
 
+        inc_db_stmt = ''
         if self._included_db:
-            incDbStmt = 'AND TABLE_SCHEMA IN(%s)' % self.inStmt(self._included_db)
-        else:
-            incDbStmt = ''
+            inc_db_stmt = 'AND TABLE_SCHEMA IN(%s)' % self.in_stmt(self._included_db)
 
+        excl_db_stmt = ''
         if self._excluded_db:
-            exclDbStmt = 'AND TABLE_SCHEMA NOT IN(%s)' % self.inStmt(self._excluded_db)
-        else:
-            exclDbStmt = ''
+            excl_db_stmt = 'AND TABLE_SCHEMA NOT IN(%s)' % self.in_stmt(self._excluded_db)
 
         sql = """
 SELECT
@@ -55,31 +53,31 @@ WHERE 1
 GROUP BY TABLE_SCHEMA, TABLE_NAME
 ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 """
-        sql = sql % (incDbStmt, exclDbStmt, self.inStmt(self._int_types.keys()))
+        sql = sql % (inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys()))
 
         cursor = self.db.cursor()
         cursor.execute(sql)
 
         return cursor.fetchall()
 
-    def getTableMaxValues(self, database, table, columns):
+    def get_table_max_values(self, database, table, columns):
         cursor = self.db.cursor()
 
-        max = ', '.join(map(lambda x: 'MAX(%s) AS %s' % (x, x), columns))
-        sql = 'SELECT %s FROM %s.%s' % (max, database, table)
+        max_expr = ', '.join(map(lambda x: 'MAX(%s) AS %s' % (x, x), columns))
+        sql = 'SELECT %s FROM %s.%s' % (max_expr, database, table)
 
         cursor.execute(sql)
 
         return cursor.fetchone()
 
-    def inStmt(self, l):
+    def in_stmt(self, l):
         return (', '.join(map(lambda x: "'" + MySQLdb.escape_string(x) + "'", l)))
 
-    def getTypeMaxValue(self, type, unsigned):
+    def get_type_max_value(self, col_type, unsigned):
         if unsigned == 'unsigned':
-            return self._int_types[type]
+            return self._int_types[col_type]
         else:
-            return int(math.ceil(self._int_types[type] / 2))
+            return int(math.ceil(self._int_types[col_type] / 2))
 
 
 
