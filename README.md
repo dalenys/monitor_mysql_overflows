@@ -15,9 +15,9 @@ Usage:
 
 ```
 ./monitor.py [-u username] [-p password] [-h hostname] [-t threshold] [-e databases] [-d databases] [-h]
- - -t is the filling ratio threshold (ex: 0.8 for alerting when a row column value is 80% higher than tha max possible column)
- - -e is a comma separated list of databases to not monitor
- - -d is a comma separated list of databases to monitor only
+ - (-t) is the filling ratio threshold (ex: 0.8 for alerting when a row column value is 80% higher than tha max possible column)
+ - (-e) is a comma separated list of databases to not monitor
+ - (-d) is a comma separated list of databases to monitor only
 ``` 
 
 
