@@ -71,7 +71,7 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 
         try:
             cursor.execute(sql)
-        except:
+        except Exception as error:
             print str(error)
             print sql
             exit(2)
