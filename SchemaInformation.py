@@ -1,3 +1,5 @@
+__author__ = "Jeremy Cohen Solal"
+
 import atexit
 from math import ceil
 
@@ -29,11 +31,13 @@ class SchemaInformation(object):
 
         inc_db_stmt = ''
         if self.included_db:
-            inc_db_stmt = 'AND TABLE_SCHEMA IN(%s)' % self.in_stmt(self.included_db)
+            inc_db_stmt = 'AND TABLE_SCHEMA IN(%s)' % self.in_stmt(
+                self.included_db)
 
         excl_db_stmt = ''
         if self.excluded_db:
-            excl_db_stmt = 'AND TABLE_SCHEMA NOT IN(%s)' % self.in_stmt(self.excluded_db)
+            excl_db_stmt = 'AND TABLE_SCHEMA NOT IN(%s)' % self.in_stmt(
+                self.excluded_db)
 
         sql = """
 SELECT
@@ -49,7 +53,8 @@ WHERE 1
 GROUP BY TABLE_SCHEMA, TABLE_NAME
 ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 """
-        sql = sql % (inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys()))
+        sql = sql % (
+        inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys()))
 
         cursor = self._db.cursor()
         cursor.execute(sql)

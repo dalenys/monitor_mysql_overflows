@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+__author__ = "Jeremy Cohen Solal"
+
 from argparse import ArgumentParser
 import atexit, re
 
@@ -24,8 +26,8 @@ def main():
                             help='MySQL host')
     arg_parser.add_argument('--threshold', '-t', default=0.8, type=float,
                             help="""The alerting threshold (ex: 0.8 means"""
-                                 """ alert when a column max value is 80%% of the"""
-                                 """ max possible value""")
+                                 """ alert when a column max value is 80%%"""
+                                 """ of the max possible value""")
     arg_parser.add_argument('--exclude', '-e', nargs='+', default=[],
                             help='Database to exclude separated by a comma')
     arg_parser.add_argument('--db', '-d', required=False, nargs='+',
@@ -41,7 +43,7 @@ def main():
                      user=args.username,
                      passwd=args.password,
                      cursorclass=DictCursor)
-    except Exception as error :
+    except Exception as error:
         print str(error)
         exit(2)
 
@@ -64,10 +66,12 @@ def main():
     for definition in columns:
         # Get all max values for a given table
 
-        columns_max_values = schema.get_table_max_values(definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
-                                                         definition['COLUMN_NAMES'].split(','))
+        columns_max_values = schema.get_table_max_values(
+            definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
+            definition['COLUMN_NAMES'].split(','))
 
-        table_cols = zip(definition['COLUMN_NAMES'].split(','), definition['COLUMN_TYPES'].split(','))
+        table_cols = zip(definition['COLUMN_NAMES'].split(','),
+                         definition['COLUMN_TYPES'].split(','))
 
         # Process column by column
         for name, full_type in table_cols:
@@ -78,11 +82,14 @@ def main():
 
             # Calculate max values with threshold and comparing
             if (current_max_value >= int(max_allowed * args.threshold)):
-                percent = round(float(current_max_value) / float(max_allowed) * 100, 2)
+                percent = round(
+                    float(current_max_value) / float(max_allowed) * 100, 2)
                 resting = max_allowed - current_max_value
-                print "WARNING: (%s %s) %s.%s.%s max value is %s near (allowed=%s%%, resting=%s)" % (
-                    type, unsigned, definition['TABLE_SCHEMA'], definition['TABLE_NAME'], name, current_max_value,
-                    percent, resting)
+                print ("""WARNING: (%s %s) %s.%s.%s max value is %s near"""
+                       """(allowed=%s%%, resting=%s)""") % (
+                          type, unsigned, definition['TABLE_SCHEMA'],
+                          definition['TABLE_NAME'], name, current_max_value,
+                          percent, resting)
 
 
 if __name__ == '__main__':
