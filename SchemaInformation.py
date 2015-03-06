@@ -66,7 +66,7 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
     def get_table_max_values(self, database, table, columns):
         cursor = self._db.cursor()
 
-        max_expr = ', '.join(map(lambda x: 'MAX(%s) AS \'%s\'' % (x, x), columns))
+        max_expr = ', '.join(map(lambda x: 'MAX(`%s`) AS \'%s\'' % (x, x), columns))
         sql = 'SELECT %s FROM %s.%s' % (max_expr, database, table)
 
         try:
