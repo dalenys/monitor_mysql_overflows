@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-import MySQLdb, MySQLdb.cursors
-import re, atexit
+import MySQLdb
+import MySQLdb.cursors
+import re
+import atexit
 import distutils.fancy_getopt
-
 from SchemaInformation import SchemaInformation
 
 # TODO: Maybe monitor float types?
@@ -22,8 +23,11 @@ def main():
             ['username=', 'u', 'MySQL username'],
             ['password=', 'p', 'MySQL password'],
             ['hostname=', 'h', 'MySQL hostname'],
-            ['threshold=', 't',
-             'The alerting threshold (ex: 0.8 means alert when a column max value is 80% of the max possible value'],
+            [
+                'threshold=',
+                't',
+                'The alerting threshold (ex: 0.8 means alert when a column max value is 80% of the max possible value'
+            ],
             ['exclude=', 'e', 'Database to exclude separated by a comma'],
             ['db=', 'd', 'Databases to analyse separated by a comma (default all)'],
             ['help', None, 'This help message']
@@ -36,12 +40,18 @@ def main():
         print "\n".join(getopt.generate_help())
         exit(2)
 
-    if hasattr(args, 'username'): user = args.username
-    if hasattr(args, 'hostname'): hostname = args.hostname
-    if hasattr(args, 'password'): password = args.password
-    if hasattr(args, 'threshold'): threshold = float(args.threshold)
-    if hasattr(args, 'db'): included_db = args.db.split(',')
-    if hasattr(args, 'exclude'): excluded_db = excluded_db + args.exclude.split(',')
+    if hasattr(args, 'username'):
+        user = args.username
+    if hasattr(args, 'hostname'):
+        hostname = args.hostname
+    if hasattr(args, 'password'):
+        password = args.password
+    if hasattr(args, 'threshold'):
+        threshold = float(args.threshold)
+    if hasattr(args, 'db'):
+        included_db = args.db.split(',')
+    if hasattr(args, 'exclude'):
+        excluded_db = excluded_db + args.exclude.split(',')
     if hasattr(args, 'help'):
         print "\n".join(getopt.generate_help())
         exit(2)
@@ -50,23 +60,24 @@ def main():
     db = MySQLdb.connect(host=hostname, user=user, passwd=password, cursorclass=MySQLdb.cursors.DictCursor)
     atexit.register(db.close)
 
-    # Configure schma analyser
+    # Configure schema analyser
     schema = SchemaInformation(db)
 
     # Handle database inc/exl parameters
-    schema.excludeDatabases(excluded_db)
-    if included_db: schema.includeDatabases(included_db)
+    schema.exclude_databases(excluded_db)
+    if included_db: schema.include_databases(included_db)
 
     # Disabling InnoDB statistics for performances
-    schema.disableStatistics()
+    schema.disable_statistics()
 
     # Get column definitions
-    columns = schema.getColumnsByTable()
+    columns = schema.get_columns_by_table()
 
     for definition in columns:
         # Get all max values for a given table
-        columns_max_values = schema.getTableMaxValues(definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
-                                                      definition['COLUMN_NAMES'].split(','))
+        columns_max_values = schema.get_table_max_values(
+            definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
+            definition['COLUMN_NAMES'].split(','))
 
         table_cols = zip(definition['COLUMN_NAMES'].split(','), definition['COLUMN_TYPES'].split(','))
 
@@ -74,7 +85,7 @@ def main():
         for name, full_type in table_cols:
             # Parsing column data to retrieve details, max values ...
             type, unsigned = re.split('\\s*\(\d+\)\s*', full_type)
-            max_allowed = schema.getTypeMaxValue(type, unsigned)
+            max_allowed = schema.get_type_max_value(type, unsigned)
             current_max_value = columns_max_values[name]
 
             # Calculate max values with threshold and comparing
