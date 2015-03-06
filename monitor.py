@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import MySQLdb, MySQLdb.cursors
 import re, atexit
@@ -86,7 +86,7 @@ def main():
                     percent, resting)
 
 
-print "Start"
-main()
-print "Done"
-
+if __name__ == '__main__':
+    print "Start"
+    main()
+    print "Done"
