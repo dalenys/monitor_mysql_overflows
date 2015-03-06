@@ -31,8 +31,8 @@ def main():
 
         dummy, args = getopt.getopt()
 
-    except Exception as error:
-        print str(error)
+    except Exception as errorMessage:
+        print str(errorMessage)
         print "\n".join(getopt.generate_help())
         exit(2)
 
@@ -52,8 +52,9 @@ def main():
 
     # Configure schma analyser
     schema = SchemaInformation(db)
-    schema.excludeDatabases(excluded_db)
 
+    # Handle database inc/exl parameters
+    schema.excludeDatabases(excluded_db)
     if included_db: schema.includeDatabases(included_db)
 
     # Disabling InnoDB statistics for performances
@@ -67,13 +68,11 @@ def main():
         columns_max_values = schema.getTableMaxValues(definition['TABLE_SCHEMA'], definition['TABLE_NAME'],
                                                       definition['COLUMN_NAMES'].split(','))
 
-        column_names = definition['COLUMN_NAMES'].split(',')
-        column_types = definition['COLUMN_TYPES'].split(',')
+        table_cols = zip(definition['COLUMN_NAMES'].split(','), definition['COLUMN_TYPES'].split(','))
 
-        idx = 0
-        for name in column_names:
+        # Process column by column
+        for name, full_type in table_cols:
             # Parsing column data to retrieve details, max values ...
-            full_type = column_types[idx]
             type, unsigned = re.split('\\s*\(\d+\)\s*', full_type)
             max_allowed = schema.getTypeMaxValue(type, unsigned)
             current_max_value = columns_max_values[name]
@@ -86,7 +85,6 @@ def main():
                     type, unsigned, definition['TABLE_SCHEMA'], definition['TABLE_NAME'], name, current_max_value,
                     percent, resting)
 
-            idx += 1
 
 print "Start"
 main()
