@@ -2,11 +2,11 @@
 
 ####Table of contents
 
-1. [Overview] (#overview)
-2. [Usage] (#usage)
-3. [Notices] (#notices)
+1. [Overview] (#Overview)
+2. [Usage] (#Usage)
+3. [Notices] (#Notices)
 
-##Overivew
+##Overview
 This program scan and report all the TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT columns where the highest value is too
 close from the highest possible value allowed by the column type.
 
@@ -21,7 +21,7 @@ It handles UNSIGNED and SIGNED cases.
  - (-d) is a comma separated list of databases to monitor only
 ``` 
 
-##Notice
+##Notices
 BE CAREFUL:
  - It could be very slow (especially on heavy loaded servers or servers with a huge databases/tables count.
  You surely want to run this tools on slave instead of a master
