@@ -21,7 +21,7 @@ def main():
     arg_parser.add_argument('--username', '-u', default='root',
                             help='MySQL username')
     arg_parser.add_argument('--password', '-p', default='',
-                            help='MySQL password')
+                            help='MySQL password', nargs='?')
     arg_parser.add_argument('--host', default='localhost',
                             help='MySQL host')
     arg_parser.add_argument('--threshold', '-t', default=0.8, type=float,
@@ -37,11 +37,16 @@ def main():
     args = arg_parser.parse_args()
     args.exclude += excluded_db
 
+    password = args.password
+    if (args.password is None) :
+        print "MySQL password for username %s" % args.username
+        password = raw_input('>')
+
     try:
         # MySQL connection
         db = connect(host=args.host,
                      user=args.username,
-                     passwd=args.password,
+                     passwd=password,
                      cursorclass=DictCursor)
     except Exception as error:
         print str(error)
