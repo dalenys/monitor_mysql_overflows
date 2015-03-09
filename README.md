@@ -15,10 +15,25 @@ It handles UNSIGNED and SIGNED cases.
 ##Usage
 
 ```
-./monitor.py [-u username] [-p password] [-h hostname] [-t threshold] [-e databases] [-d databases] [-h]
- - (-t) is the filling ratio threshold (ex: 0.8 for alerting when a row column value is 80% higher than tha max possible column)
- - (-e) is a comma separated list of databases to not monitor
- - (-d) is a comma separated list of databases to monitor only
+usage: monitor.py [-h] [--username USERNAME] [--password [PASSWORD]]
+                  [--host HOST] [--threshold THRESHOLD]
+                  [--exclude EXCLUDE [EXCLUDE ...]] [--db DB [DB ...]]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --username USERNAME, -u USERNAME
+                        MySQL username
+  --password [PASSWORD], -p [PASSWORD]
+                        MySQL password
+  --host HOST           MySQL host
+  --threshold THRESHOLD, -t THRESHOLD
+                        The alerting threshold (ex: 0.8 means alert when a
+                        column max value is 80% of the max possible value
+  --exclude EXCLUDE [EXCLUDE ...], -e EXCLUDE [EXCLUDE ...]
+                        Database to exclude separated by a comma
+  --db DB [DB ...], -d DB [DB ...]
+                        Databases to analyse separated by a comma (default
+                        all)
 ``` 
 
 ##Notices
