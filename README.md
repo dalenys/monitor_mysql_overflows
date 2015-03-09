@@ -45,6 +45,6 @@ BE CAREFUL:
  
  See: http://www.percona.com/blog/2011/12/23/solving-information_schema-slowness/
  
- If you interrupt this script (Ctrl+C ...) it is up to you to reactivate this using something like:
+ If you interrupt this script (Ctrl+C ...) it is up to you to reactivate it using something like:
  set global innodb_stats_on_metadata=1;
  
