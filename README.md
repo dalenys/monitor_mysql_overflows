@@ -2,9 +2,9 @@
 
 #### Table of contents
 
-1. [Overview] (#Overview)
-2. [Usage] (#Usage)
-3. [Notices] (#Notices)
+1. [Overview] (#overview)
+2. [Usage] (#usage)
+3. [Notices] (#notices)
 
 ## Overview
 This program scan and report all the TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT columns where the highest value is too
@@ -39,6 +39,10 @@ optional arguments:
 ## Notices
 BE CAREFUL:
  - It could be very slow (especially on heavy loaded servers or servers with a huge databases/tables count.
- You surely want to run this tools on slave instead of a master
+ You surely want to run this tool on a slave instead of a master
+ 
  - This script disable innodb_stats computing for optimizing performance_schema analysis and enable it at the end
- see: [http://www.percona.com/blog/2011/12/23/solving-information_schema-slowness/]
+ see: http://www.percona.com/blog/2011/12/23/solving-information_schema-slowness/
+ If you interrupt this script (Ctrl+C ...) it is up to you to reactivate this using something like:
+ set global innodb_stats_on_metadata=1;
+ 

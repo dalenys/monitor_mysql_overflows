@@ -3,7 +3,7 @@
 __author__ = "Jeremy Cohen Solal"
 
 from argparse import ArgumentParser
-import atexit, re
+import atexit, re, getpass
 
 from MySQLdb import connect
 from MySQLdb.cursors import DictCursor
@@ -39,8 +39,7 @@ def main():
 
     password = args.password
     if (args.password is None) :
-        print "MySQL password for username %s" % args.username
-        password = raw_input('>')
+        password = getpass.getpass()
 
     try:
         # MySQL connection
@@ -64,6 +63,8 @@ def main():
 
     # Disabling InnoDB statistics for performances
     schema.init_mysql_session()
+
+    print "Start"
 
     # Get column definitions
     columns = schema.get_columns_by_table()
@@ -95,9 +96,7 @@ def main():
                           type, unsigned, definition['TABLE_SCHEMA'],
                           definition['TABLE_NAME'], name, current_max_value,
                           percent, resting)
-
+    print "Done"
 
 if __name__ == '__main__':
-    print "Start"
     main()
-    print "Done"
