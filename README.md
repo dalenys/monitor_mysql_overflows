@@ -42,7 +42,9 @@ BE CAREFUL:
  You surely want to run this tool on a slave instead of a master
  
  - This script disable innodb_stats computing for optimizing performance_schema analysis and enable it at the end
- see: http://www.percona.com/blog/2011/12/23/solving-information_schema-slowness/
+ 
+ See: http://www.percona.com/blog/2011/12/23/solving-information_schema-slowness/
+ 
  If you interrupt this script (Ctrl+C ...) it is up to you to reactivate this using something like:
  set global innodb_stats_on_metadata=1;
  
