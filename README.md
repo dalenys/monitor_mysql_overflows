@@ -1,18 +1,18 @@
 # monitor_mysql_overflows
 
-####Table of contents
+#### Table of contents
 
 1. [Overview] (#Overview)
 2. [Usage] (#Usage)
 3. [Notices] (#Notices)
 
-##Overview
+## Overview
 This program scan and report all the TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT columns where the highest value is too
 close from the highest possible value allowed by the column type.
 
 It handles UNSIGNED and SIGNED cases.
 
-##Usage
+## Usage
 
 ```
 usage: monitor.py [-h] [--username USERNAME] [--password [PASSWORD]]
@@ -36,7 +36,7 @@ optional arguments:
                         all)
 ``` 
 
-##Notices
+## Notices
 BE CAREFUL:
  - It could be very slow (especially on heavy loaded servers or servers with a huge databases/tables count.
  You surely want to run this tools on slave instead of a master
