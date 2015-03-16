@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-__author__ = "Jeremy Cohen Solal"
-
 from argparse import ArgumentParser
 import atexit, re, getpass
 
