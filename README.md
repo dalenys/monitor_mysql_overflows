@@ -34,20 +34,20 @@ optional arguments:
   --db DB [DB ...], -d DB [DB ...]
                         Databases to analyse separated by a comma (default
                         all)
-``` 
+```
 
 ## Notices
 BE CAREFUL:
  - It could be very slow (especially on heavy loaded servers or servers with a huge databases/tables count.
  You surely want to run this tool on a slave instead of a master
- 
+
  - This script disable innodb_stats computing for optimizing performance_schema analysis and enable it at the end
- 
+
  See: http://www.percona.com/blog/2011/12/23/solving-information_schema-slowness/
- 
+
  If you interrupt this script (Ctrl+C ...) it is up to you to reactivate it using something like:
  set global innodb_stats_on_metadata=1;
- 
+
 
 ## Installation
 

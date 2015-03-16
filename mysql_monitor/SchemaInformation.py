@@ -89,5 +89,3 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 
     def _in_stmt(self, l):
         return (', '.join(map(lambda x: "'" + escape_string(x) + "'", l)))
-
-
