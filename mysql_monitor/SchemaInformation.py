@@ -1,5 +1,3 @@
-__author__ = "Jeremy Cohen Solal"
-
 import atexit
 from math import ceil
 
