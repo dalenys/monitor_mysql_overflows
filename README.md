@@ -1,4 +1,4 @@
-# monitor_mysql_overflows
+# mysql-monitor
 
 #### Table of contents
 
@@ -48,3 +48,34 @@ BE CAREFUL:
  If you interrupt this script (Ctrl+C ...) it is up to you to reactivate it using something like:
  set global innodb_stats_on_metadata=1;
  
+
+## Installation
+
+mysql-monitor is not yet released but when it will, it will be available on Pypi.
+
+To install it with a [Python virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) (recommended):
+
+```
+$> virtualenv myenv
+$> source myenv/bin/activate
+(myenv) $> pip install mysql-monitor
+(myenv) $> mysql-monitor -h
+```
+
+Or on your system, without virtualenv:
+
+```
+$> pip install mysql-monitor
+$> mysql-monitor -h
+```
+
+## Development
+
+To start hacking on the project, run:
+
+```
+$> virtualenv myenv
+$> source myenv/bin/activate
+(myenv) $> pip install -e .
+(myenv) $> mysql-monitor -h
+```

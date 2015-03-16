@@ -8,11 +8,11 @@ import atexit, re, getpass
 from MySQLdb import connect
 from MySQLdb.cursors import DictCursor
 
-from SchemaInformation import SchemaInformation
+from .SchemaInformation import SchemaInformation
 
 
 # TODO: Maybe monitor float types?
-def main():
+def monitor():
     # TODO: maybe add phpmyadmin here?
     excluded_db = ['mysql', 'information_schema', 'performance_schema']
     included_db = []
@@ -97,6 +97,3 @@ def main():
                           definition['TABLE_NAME'], name, current_max_value,
                           percent, resting)
     print "Done"
-
-if __name__ == '__main__':
-    main()
