@@ -19,7 +19,7 @@ class SchemaInformation(object):
     def init_mysql_session(self):
         cursor = self._db.cursor()
         cursor.execute('SET GLOBAL innodb_stats_on_metadata=0')
-        #Handle group concat limitation (see MySQL group_concat documentation)
+        # Handle group concat limitation (see MySQL group_concat documentation)
         cursor.execute('SET SESSION group_concat_max_len = 1048576')
         atexit.register(self.enable_statistics)
 
@@ -54,7 +54,8 @@ GROUP BY TABLE_SCHEMA, TABLE_NAME
 ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
 """
         sql = sql % (
-        inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys()))
+            inc_db_stmt, excl_db_stmt, self.in_stmt(self._int_types.keys())
+        )
 
         cursor = self._db.cursor()
         cursor.execute(sql)
@@ -64,7 +65,9 @@ ORDER BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
     def get_table_max_values(self, database, table, columns):
         cursor = self._db.cursor()
 
-        max_expr = ', '.join(map(lambda x: 'MAX(`%s`) AS \'%s\'' % (x, x), columns))
+        max_expr = ', '.join(
+            map(lambda x: 'MAX(`%s`) AS \'%s\'' % (x, x), columns)
+        )
         sql = 'SELECT %s FROM %s.%s' % (max_expr, database, table)
 
         try:

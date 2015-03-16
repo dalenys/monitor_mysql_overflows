@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
-import atexit, re, getpass
+import atexit
+import getpass
+import re
 
 from MySQLdb import connect
 from MySQLdb.cursors import DictCursor
@@ -34,7 +36,7 @@ def monitor():
     args.exclude += excluded_db
 
     password = args.password
-    if (args.password is None) :
+    if args.password is None:
         password = getpass.getpass()
 
     try:
