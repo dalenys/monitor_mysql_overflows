@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 def get_version():
     """ Reads package version number from package's __init__.py. """
     with open(os.path.join(
-        os.path.dirname(__file__), 'mysql_monitor', '__init__.py'
+        os.path.dirname(__file__), 'mysql_overflows_monitor', '__init__.py'
     )) as init:
         for line in init.readlines():
             res = re.match(r'^__version__ = [\'"](.*)[\'"]$', line)
@@ -26,13 +26,13 @@ def get_long_description():
 
 
 setup(
-    name='mysql-monitor',
+    name='mysql-overflows-monitor',
     version=get_version(),
-    description='MySQL utilities to detect common problems',
+    description='MySQL utilities to detect integer like columns overflows',
     long_description=get_long_description(),
     author='Jeremy Cohen Solal',
     author_email='jeremy@rentabiliweb.com',
-    url='http://www.rentabiliweb.com',
+    url='http://www.rentabiliweb-group.com',
     packages=find_packages(),
     install_requires=[
         'mysql-python',
@@ -49,7 +49,7 @@ setup(
     license='Proprietary',
     entry_points={
         'console_scripts': [
-            'mysql-monitor = mysql_monitor:monitor',
+            'mysql-overflows-monitor = mysql_overflows_monitor:monitor',
         ],
     },
 )
