@@ -1,18 +1,16 @@
-#!/usr/bin/env python
-
-__author__ = "Jeremy Cohen Solal"
-
 from argparse import ArgumentParser
-import atexit, re, getpass
+import atexit
+import getpass
+import re
 
 from MySQLdb import connect
 from MySQLdb.cursors import DictCursor
 
-from SchemaInformation import SchemaInformation
+from .SchemaInformation import SchemaInformation
 
 
 # TODO: Maybe monitor float types?
-def main():
+def monitor():
     # TODO: maybe add phpmyadmin here?
     excluded_db = ['mysql', 'information_schema', 'performance_schema']
     included_db = []
@@ -38,7 +36,7 @@ def main():
     args.exclude += excluded_db
 
     password = args.password
-    if (args.password is None) :
+    if args.password is None:
         password = getpass.getpass()
 
     try:
@@ -97,6 +95,3 @@ def main():
                           definition['TABLE_NAME'], name, current_max_value,
                           percent, resting)
     print "Done"
-
-if __name__ == '__main__':
-    main()

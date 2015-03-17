@@ -1,0 +1,4 @@
+include CHANGES.md
+include LICENSE
+include MANIFEST.in
+include README.md
