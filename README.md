@@ -5,6 +5,8 @@
 1. [Overview] (#overview)
 2. [Usage] (#usage)
 3. [Notices] (#notices)
+4. [Installation] (#installation)
+5. [Development] (#development)
 
 ## Overview
 This program scan and report all the TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT columns where the highest value is too
