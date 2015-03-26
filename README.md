@@ -53,8 +53,6 @@ BE CAREFUL:
 
 ## Installation
 
-mysql-monitor is not yet released but when it will, it will be available on Pypi.
-
 To install it with a [Python virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) (recommended):
 
 ```

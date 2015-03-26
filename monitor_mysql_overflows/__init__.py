@@ -1,3 +1,5 @@
+__version__ = '0.0.1'
+
 from argparse import ArgumentParser
 import atexit
 import getpass
@@ -7,7 +9,6 @@ from MySQLdb import connect
 from MySQLdb.cursors import DictCursor
 
 from .SchemaInformation import SchemaInformation
-
 
 # TODO: Maybe monitor float types?
 def monitor():
